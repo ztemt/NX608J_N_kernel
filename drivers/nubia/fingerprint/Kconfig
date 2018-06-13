@@ -1,0 +1,40 @@
+################################################# FINGER_PRINTER START
+config  NUBIA_SENSORS_FP
+	tristate "NUBIA FP DEVICE"
+	default n
+
+if NUBIA_SENSORS_FP
+
+config NUBIA_FP_AUTODETECT
+	tristate "nubia fingerprint autodetect"
+	depends on NUBIA_SENSORS_FP
+	default n
+	help
+	  If you say yes here you, will enable fingerprint
+	  autodetect function.
+
+################################################# FINGER_PRINTER_GF3258 START
+source drivers/nubia/fingerprint/gf3258/Kconfig
+choice
+        prompt "choose the GF3258 device style"
+        depends on NUBIA_SENSORS_FP_GF3258
+		default NUBIA_SENSORS_FP_GF3258_PLATFORM
+		help
+		  GF3258 need to select the work style
+
+config NUBIA_SENSORS_FP_GF3258_SPI
+        bool "GF3258 work as SPI device"
+        help
+          If you want GF3258 work as SPI device, select it.
+
+config NUBIA_SENSORS_FP_GF3258_PLATFORM
+        bool "GF3258 work as PLATFORM device"
+        help
+          If you want GF3258 work as PLATFORM device, select it.
+endchoice
+################################################# FINGER_PRINTER_GF3258 END
+################################################# FINGER_PRINTER_SUNWAVE START
+source drivers/nubia/fingerprint/sunwave_fp/Kconfig
+################################################# FINGER_PRINTER_SUNWAVE END
+
+endif

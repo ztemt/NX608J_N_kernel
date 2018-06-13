@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+
+#include "msm8953.dtsi"
+#include "msm-pmi8950.dtsi"
+#include "msm8953-mtp.dtsi"
+#include "msm8953-pmi8950.dtsi"
+//#include "msm8953-camera-sensor-mtp.dtsi"   //delete by ZTEMT kangxiong to include Nubia camera dts
+
+/ {
+	model = "Qualcomm Technologies, Inc. MSM8953 + PMI8950 MTP";
+	compatible = "qcom,msm8953-mtp", "qcom,msm8953", "qcom,mtp";
+	qcom,board-id= <8 0>;
+	qcom,pmic-id = <0x010016 0x010011 0x0 0x0>;
+};
+
+/{
+	mtp_batterydata: qcom,battery-data {
+		qcom,batt-id-range-pct = <15>;
+		#include "batterydata-itech-3000mah.dtsi"
+		#include "batterydata-ascent-3450mAh.dtsi"
+		#include "batterydata-ztemt-4v4-5000mah.dtsi"
+	};
+};
+
+&pmi8950_fg {
+	qcom,battery-data = <&mtp_batterydata>;
+	qcom,resume-soc = <99>; 
+    qcom,fg-cutoff-voltage-mv = <3300>;  
+    qcom,fg-iterm-ma = <200>;  
+    qcom,fg-chg-iterm-ma = <150>;
+
+    qcom,cold-bat-decidegc = <(-10)>;
+    qcom,cool-bat-decidegc = <100>;
+    qcom,warm-bat-decidegc = <430>;
+    qcom,hot-bat-decidegc = <500>;
+    qcom,cold-hot-jeita-hysteresis = <20 20>;//add for jeita hysteresis
+
+    qcom,irq-volt-empty-mv = <3100>;
+    qcom,vbat-estimate-diff-mv = <200>;
+    qcom,fg-cc-cv-threshold-mv = <4390>;
+	
+    qcom,thermal-coefficients = [EC 85 75 4A FC 35];
+    qcom,hold-soc-while-full;
+    qcom,ext-sense-type;
+};
+
+&pmi8950_charger {
+	qcom,battery-data = <&mtp_batterydata>;
+	qcom,chg-led-sw-controls;
+	qcom,chg-led-support;
+    qcom,float-voltage-mv = <4400>;  
+    qcom,resume-delta-mv = <50>;    
+
+    qcom,charging-timeout-mins = <768>;
+    qcom,fastchg-current-ma = <3000>;
+    qcom,fastchg-current-comp = <250>; //add jeita control charge current
+      // qcom,external-typec;
+      // qcom,typec-psy-name = "typec";
+};
+
+#include NUBIA_OVERWRITE_DTSI_FILE

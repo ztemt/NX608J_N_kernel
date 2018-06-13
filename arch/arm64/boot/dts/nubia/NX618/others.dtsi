@@ -1,0 +1,59 @@
+/*
+ * nubia overwrite dts
+ */
+&sdhc_2 {
+    cd-gpios = <&tlmm 133 0x0>;
+};
+&spmi_bus {
+        qcom,pm8953@0 {
+ 		pm8953_rtc: qcom,pm8953_rtc {
+		       qcom,qpnp-rtc-alarm-pwrup = <1>;
+			};
+                qcom,power-on@800 {
+                        qcom,pon_1 {
+                                        qcom,support-reset = <1>;
+                                        qcom,s1-timer = <10256>;
+                                        qcom,s2-timer = <2000>;
+                                        qcom,s2-type = <7>;
+                                        };
+                        };
+                };
+        };
+&soc {
+	/delete-node/ eldo2;
+        qcom,bcl {
+                qcom,ibat-monitor {
+                        qcom,soc-low-threshold = <5>;
+                };
+        };
+        qcom,wdt@b017000 {
+                qcom,bark-time = <20000>;
+                qcom,pet-time = <15000>;
+        };
+	//larks add for keyreset 
+	keyreset {
+		compatible = "nubia,keyreset";
+		keys-down = <0x73 0x72>;
+		keys-up = <0x73 0x72>;
+		keyreset-need-panic;
+		key_down_delay = <20>;
+	};
+};
+/ {
+	reserved-memory {
+			//larks add pstore reserve region
+		other_ext_mem: other_ext_region@0 {
+                        compatible = "removed-dma-pool";
+                        no-map;
+                        reg = <0x0 0x84a00000 0x0 0x1e00000>;
+                };
+		pstore_reserve_mem: pstore_reserve_mem_region@9ff00000 {
+			compatible = "removed-dma-pool";
+			no-map;
+			reg = <0x0 0x9ff00000 0x0 0x00100000>;
+		};
+	};
+};
+&slim_msm {
+      /delete-node/ tasha_codec;
+};

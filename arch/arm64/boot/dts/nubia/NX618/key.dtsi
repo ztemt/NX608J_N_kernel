@@ -1,0 +1,18 @@
+/*
+ * nubia overwrite dts
+ */
+//NUBIA ADD for delete camera focus and camera snapshot
+&soc {
+	gpio_keys {
+    /delete-node/ camera_focus;
+	/delete-node/ camera_snapshot;
+        we_chat {
+                        label = "we_chat";
+                        gpios = <&tlmm 86 0x1>;
+                        linux,input-type = <1>;
+                        linux,code = <0xd8>;
+                        gpio-key,wakeup;
+                        debounce-interval = <15>;
+                };
+	};
+};	

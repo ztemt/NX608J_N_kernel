@@ -1,0 +1,29 @@
+
+menu "nubia driver touchscreens"
+
+config NUBIA_TOUCHSCREEN_SYNAPTICS_DSX_2_7_0
+        bool "config nubia touchscreens synaptics dsx v2.7.0"
+        default n
+        help
+          Say Y here if you have a nubia touchscreen synaptics dsx connected
+          to your system.
+	  If unsure, say N.
+
+if NUBIA_TOUCHSCREEN_SYNAPTICS_DSX_2_7_0
+source "drivers/nubia/touch/synaptics_dsx_v2.7.0/Kconfig"
+endif
+
+config NUBIA_TOUCHSCREEN_NT36XXX
+        bool "config nubia touchscreens nt36xxx"
+        default n
+        help
+          Say Y here if you have a nubia touchscreen nt36xxx connected
+          to your system.
+	  If unsure, say N.
+
+if NUBIA_TOUCHSCREEN_NT36XXX
+source "drivers/nubia/touch/nt36xxx/Kconfig"
+endif
+
+
+endmenu

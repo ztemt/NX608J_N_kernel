@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+
+/*
+ * Add nubia sensors
+ */
+
+&i2c_2 {
+		/delete-node/ adv7533@39;
+
+    ams@39 {
+        compatible = "tmd2725";
+        reg = <0x39>;
+        interrupt-parent = <&tlmm>;
+        interrupts = <43 0x2>;
+        vdd-supply = <&pm8953_l10>;
+        vio-supply = <&pm8953_l6>;
+        tmd,irq-gpio = <&tlmm 43 0x2002>;
+        pinctrl-names = "tmd2725_default","tmd2725_sleep";
+        pinctrl-0 = <&tmd2725_default>;
+        pinctrl-1 = <&tmd2725_sleep>;
+        tmd,power_always_on = <1>;
+        tmd,has_als = <1>;
+        tmd,has_ps = <1>;
+        tmd,tp_moudle_count = <3>;
+        //[module_id] [which_seg] [d_factor] ch0[1] ch1[0] ch0[1] ch1[0]
+        tmd,tp0 = "0","0","589","1000","213","708","73";
+        //[module_id] [which_seg] [d_factor] ch0[1] ch1[0] ch0[1] ch1[0]
+        tmd,tp1 = "1","1","615","932","260","800","270";
+        //[module_id] [which_seg] [d_factor] ch0[1] ch1[0] ch0[1] ch1[0]
+        tmd,tp2 = "2","0","615","1000","260","800","270";
+    };
+};
+
+&pm8953_l10 {
+	regulator-min-microvolt = <3200000>;
+	regulator-max-microvolt = <3200000>;
+	qcom,init-voltage = <3200000>;
+};
+
+
+/*
+&soc {
+	hall_device_out {
+		compatible = "nubia,hall_device";
+		status = "okay";
+		hall_device,hw_device_count = <1>;
+		vio-supply = <&pm8937_l5>;
+		interrupt-parent = <&tlmm>;
+		hall_device,irq-gpio-0 = <&tlmm 63 0x00>;
+		pinctrl-names = "hall_default","hall_sleep";
+		pinctrl-0 = <&hall_default>;
+		pinctrl-1 = <&hall_sleep>;
+	};
+};
+*/
+
+&tlmm {
+    tmd2725_int {
+        tmd2725_default: tmd2725_default{
+            mux {
+                pins = "gpio43";
+                function = "gpio";
+            };
+            config {
+                pins = "gpio43";
+                drive-strength = <6>;
+                bias-pull-up;
+            };
+        };
+        tmd2725_sleep: tmd2725_sleep{
+            mux {
+                pins = "gpio43";
+                function = "gpio";
+            };
+            config {
+                pins = "gpio43";
+                drive-strength = <2>;
+                bias-pull-up;
+            };
+        };
+    };
+    
+    /*
+ 		hall_device_int{
+			hall_default: active {
+				mux {
+					pins = "gpio63";
+					function = "gpio";
+				};
+				config {
+					pins="gpio63";
+					drive-strength = <6>;
+					bias-pull-up;
+				};
+			};
+
+			hall_sleep: suspend {
+				mux {
+					pins = "gpio63";
+					function = "gpio";
+				};
+				config{
+					pins= "gpio63";
+					drive-strength = <2>;
+					bias-pull-up;
+				};
+			};
+		};
+		*/
+};

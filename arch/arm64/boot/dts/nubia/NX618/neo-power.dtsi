@@ -1,0 +1,154 @@
+/*
+ * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&i2c_2 {
+        /* Parallel-charger configuration */
+        smb1351-charger@1d {
+                compatible = "qcom,smb1351-charger";
+                reg = <0x1d>;
+                qcom,parallel-en-pin-polarity = <1>;
+                qcom,parallel-charger;
+                qcom,float-voltage-mv = <4400>;
+                qcom,recharge-mv = <100>;
+                status = "ok";
+        };
+};
+
+/{
+        mtp_batterydata: qcom,battery-data {
+				qcom,batt-id-range-pct = <15>;
+                #include "batterydata-ztemt-4v4-5000mah.dtsi" //nubia added
+        };
+};
+
+&pmi8950_charger {
+        qcom,float-voltage-mv = <4400>;  //nubia modify 4200 --> 4400
+        qcom,resume-delta-mv = <50>;     //nubia modify 200 --> 50
+
+        qcom,charging-timeout-mins = <768>;
+        qcom,fastchg-current-ma = <3000>;
+        qcom,fastchg-current-comp = <250>; //add jeita control charge current
+        qcom,parallel-usb-min-current-ma = <1400>;
+        qcom,parallel-usb-9v-min-current-ma = <900>;
+        qcom,parallel-allowed-lowering-ma = <500>;
+        nubia,bat-temp-limit-support; //nubia add for temp control
+        nubia,warm-using-dec = <400>;//nubia add for temp more than 40 degree start control if led on
+        nubia,warm-using-ibatt-ma = <500>;//nubia add for lcd on temp limit current
+        nubia,disable-pm-led;
+
+        nubia,warm-chging-ma = <250>;
+        nubia,warm-chging-mv = <4100>;
+        nubia,warm-chging-dec2 = <450>;
+        nubia,cool-chging-ma = <700>;
+
+        qcom,smbchg-vadc = <&pmi8950_vadc>;
+        qcom,enable-hvdcp-9v;
+
+};
+
+&pmi8950_fg {
+        qcom,resume-soc = <99>; //nubia modify 95 --> 99
+        qcom,fg-cutoff-voltage-mv = <3300>;  //nubia modify 3400 --> 3300
+        qcom,fg-iterm-ma = <200>;  //nubia modify 150 --> 200
+        qcom,fg-chg-iterm-ma = <150>;//nubia modify 100 --> 150
+
+        qcom,cold-bat-decidegc = <(-10)>;
+        qcom,cool-bat-decidegc = <100>;
+        qcom,warm-bat-decidegc = <430>;
+        qcom,hot-bat-decidegc = <500>;
+        qcom,cold-hot-jeita-hysteresis = <20 20>;//add for jeita hysteresis
+
+        qcom,irq-volt-empty-mv = <3100>;
+        qcom,vbat-estimate-diff-mv = <200>;
+	qcom,fg-cc-cv-threshold-mv = <4390>;
+
+        qcom,thermal-coefficients = [EC 85 75 4A FC 35];
+        qcom,hold-soc-while-full;
+        nubia,use-default-batt-type = "ztemt_atl_5000mah";
+        qcom,ext-sense-type;
+};
+&soc {
+	usb3: ssusb@7000000 {
+        qcom,usbin-vadc = <&pmi8950_vadc>;
+		qcom,detect-dpdm-floating;
+	};
+};
+&spmi_bus {
+	qcom,pm8953@0 {
+		pm8953_gpios: gpios {
+			spmi-dev-container;
+			compatible = "qcom,qpnp-pin";
+			gpio-controller;
+			#gpio-cells = <2>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+			label = "pm8953-gpio";
+			gpio@c000 {
+				reg = <0xc000 0x100>;
+				qcom,pin-num = <1>;
+				qcom,mode = <0>;
+				qcom,invert = <0>;
+				qcom,src_sel = <0>;
+				qcom,pull = <4>;
+				status = "ok";
+			};
+			gpio@c100 {
+				reg = <0xc100 0x100>;
+				qcom,pin-num = <2>;
+				qcom,vin-sel = <0>;
+				qcom,mode = <0>;
+				qcom,invert = <0>;
+				qcom,src_sel = <0>;
+				qcom,pull = <4>;
+				status = "ok";
+			};
+			gpio@c300 {
+				reg = <0xc300 0x100>;
+				qcom,pin-num = <4>;
+				qcom,mode = <0>;
+				qcom,invert = <0>;
+				qcom,src_sel = <0>;
+				qcom,pull = <4>;
+				status = "ok";
+			};
+			gpio@c400 {
+				reg = <0xc400 0x100>;
+				qcom,pin-num = <5>;
+				qcom,mode = <0>;
+				qcom,invert = <0>;
+				qcom,src_sel = <0>;
+				qcom,pull = <4>;
+				status = "ok";
+			};
+			gpio@c500 {
+				reg = <0xc500 0x100>;
+				qcom,pin-num = <6>;
+				qcom,mode = <0>;
+				qcom,invert = <0>;
+				qcom,src_sel = <0>;
+				qcom,pull = <4>;
+				status = "ok";
+			};
+			gpio@c700 {
+				reg = <0xc700 0x100>;
+				qcom,pin-num = <8>;
+				qcom,mode = <0>;
+				qcom,invert = <0>;
+				qcom,src_sel = <0>;
+				qcom,pull = <4>;
+				status = "ok";
+			};
+		};
+	};
+
+};

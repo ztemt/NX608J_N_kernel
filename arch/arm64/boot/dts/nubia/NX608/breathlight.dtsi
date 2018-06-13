@@ -1,0 +1,95 @@
+/*
+ * nubia overwrite dts
+ */
+&spmi_bus {
+	qcom,pm8953@0 {
+	         //NUBIA ADD for green light 
+	        mpps {	              
+	              mpp@a100 {
+	                   status = "disabled";
+	             };
+	        };
+		     qcom,leds@a100 { 
+		           compatible = "qcom,leds-qpnp";
+		           reg = <0xa100 0x100>;
+		           qcom,led_mpp_2 {
+                               label = "mpp";
+	                       linux,name = "red";
+			       qcom,default-state = "off";
+			       qcom,id = <6>;
+			       qcom,max-current = <25>;
+			       qcom,current-setting = <5>;
+                               qcom,min-brightness = <1>;
+                               qcom,source-sel = <10>;
+			       qcom,mode-ctrl = <0x60>;
+			       qcom,mode = "pwm";
+			       linux,default-trigger = "none";
+			       pwms = <&pm8953_pwm 0 0>;
+			       qcom,pwm-us = <1000>;
+		           };
+	             
+		     };
+          //NUBIA ADD for green light
+	};
+	qcom,pm8953@1 {
+	     /delete-node/ pwm@bc00 ;
+	     pm8953_pwm: pwm@bc00 { 
+	        status = "okay";
+	        compatible = "qcom,qpnp-pwm";
+		reg = <0xbc00 0x100>;
+		reg-names = "qpnp-lpg-channel-base";
+		qcom,channel-id = <0x0>;
+		qcom,supported-sizes = <0x6 0x9>;
+		#pwm-cells = <0x2>; 
+		qcom,dtest-line=<2>;
+		qcom,dtest-output=<2>;
+	    };	   
+	};
+	qcom,pmi8950@2{
+	     qcom,qpnp-smbcharger {
+	        /delete-property/ qcom,chg-led-sw-controls;
+	        /delete-property/ qcom,chg-led-support; 
+	     };
+	     mpps {
+	       mpp@a100 {
+	          status = "disabled";
+	       };
+	     };
+		  //NUBIA ADD for red light 
+		  qcom,leds@a100 { 
+		      compatible = "qcom,leds-qpnp";
+	              reg = <0xa100 0x100>;
+	              qcom,led_mpp_2 {
+			label = "mpp"; 
+			linux,name = "green";
+			qcom,default-state = "off";
+		        qcom,id = <6>;
+			qcom,max-current = <25>;
+			qcom,current-setting = <5>;
+                        qcom,min-brightness = <1>;
+		        qcom,mode-ctrl = <0x60>;
+                        qcom,source-sel = <10>;
+		        qcom,mode = "pwm";
+		        linux,default-trigger = "none";
+		        pwms = <&pmi8950_pwm 0 0>;
+	                qcom,pwm-us = <1000>;
+	            };
+		 };
+      //NUBIA ADD for red light
+	};
+	
+	qcom,pmi8950@3{
+	    /delete-node/ pwm@b000 ;
+	    pmi8950_pwm: pwm@b000 { 
+	        status = "okay";
+		compatible = "qcom,qpnp-pwm";
+		reg = <0xb000 0x100>;
+		reg-names = "qpnp-lpg-channel-base";
+		qcom,channel-id = <0x0>;
+		qcom,supported-sizes = <0x6 0x9>;
+		#pwm-cells = <0x2>; 
+		qcom,dtest-line=<2>;
+		qcom,dtest-output=<2>;
+	    };	 
+	};
+};

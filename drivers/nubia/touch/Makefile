@@ -1,0 +1,4 @@
+
+obj-$(CONFIG_NUBIA_TOUCHSCREEN_SYNAPTICS_DSX_2_7_0) += synaptics_dsx_v2.7.0/
+obj-$(CONFIG_NUBIA_TOUCHSCREEN_NT36XXX) += nt36xxx/
+

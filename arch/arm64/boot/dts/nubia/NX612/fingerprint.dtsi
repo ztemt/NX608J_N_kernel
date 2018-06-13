@@ -1,0 +1,17 @@
+&soc {
+    qcom_fp@6 {
+        status = "ok";
+        compatible = "sunwave,fingerprint";
+        interrupt-parent = <&tlmm>;
+        interrupts = <48 0>;
+		avdd-supply = <&pm8953_l17>;
+        //sunwave,gpio_pwr = <&tlmm 35 0x00>;
+        sunwave,gpio_int = <&tlmm 48 0x00>;
+        sunwave,gpio_rst = <&tlmm 47 0x00>;
+    };
+};
+
+/*****finger memory changed *****/
+&qcom_seecom{
+        reg = <0x84a00000 0x1900000>;
+};

@@ -1,0 +1,17 @@
+/*
+ * nubia overwrite dts
+ */
+&spmi_bus {
+	qcom,pmi8950@3{
+		//NUBIA ADD for vibrator start
+		pmi_haptic: qcom,haptic@c000 {
+                qcom,actuator-type = "erm";
+		qcom,vmax-mv = <3000>;
+		qcom,lra-high-z = "none";
+		qcom,lra-auto-res-mode = "none";
+		qcom,lra-res-cal-period = <4>;
+		qcom,nubia_vibrator_ms =<30>;
+		};
+     	//NUBIA ADD for vibrator end
+	};
+};
